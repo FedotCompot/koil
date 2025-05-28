@@ -163,8 +163,8 @@ async function createGame() {
         itemPickupSound,
         bombBlastSound,
     };
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const ws = new WebSocket(`${protocol}//${window.location.hostname}:${SERVER_PORT}`);
+    const wsEndpoint = window.location.protocol === 'https:' ? '/ws' : `ws://${window.location.hostname}:${SERVER_PORT}`;
+    const ws = new WebSocket(wsEndpoint);
     if (window.location.hostname === 'tsoding.github.io')
         ws.close();
     const display = createDisplay(wasmClient, SCREEN_WIDTH, SCREEN_HEIGHT);

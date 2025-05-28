@@ -210,8 +210,20 @@ async function createGame(): Promise<Game> {
         bombBlastSound,
     }
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const ws = new WebSocket(`${protocol}//${window.location.hostname}:${SERVER_PORT}`);
+    // Since there is no ssl/tls support most likely the application is
+    // deployed under a reverse proxy. And because the is no bundling the
+    // only solution is to access websocket dinamically based on the URL.
+    // 
+    // When accessing locally the endpoint will be:
+    // ws://localhost:6070
+    // 
+    // When accessing through a reverse proxy:
+    // wss://host/ws
+    // 
+    // Specifying just the path assumes the protocol (http=ws, https=wss)
+    // host and port.
+    const wsEndpoint = window.location.protocol === 'https:' ? '/ws' : `ws://${window.location.hostname}:${SERVER_PORT}`;
+    const ws = new WebSocket(wsEndpoint);
     // HACK: This application is deployed to GitHub Pages for the demo
     // purposes. Unfortunately, GitHub Pages only allow hosting static
     // assets, so we can only operate in Offline Mode. At the same
