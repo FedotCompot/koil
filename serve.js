@@ -8,7 +8,7 @@ const { spawn } = require('child_process');
  * @param {string[]} args 
  * @returns {ReturnType<typeof spawn>}
  */
-function cmd(program, args = []) {
+function cmd(program, args = [], stopOnClose = false) {
     const spawnOptions = { "shell": true };
     console.log('CMD:', program, args.flat(), spawnOptions);
     const p = spawn(program, args.flat(), spawnOptions); // NOTE: flattening the args array enables you to group related arguments for better self-documentation of the running command
@@ -20,9 +20,12 @@ function cmd(program, args = []) {
         if (code !== 0) {
             console.error(program, args, 'exited with', code);
         }
+        if (stopOnClose) {
+            process.exit(code);
+        }
     });
     return p;
 }
 
-cmd('./build/server');
-cmd('http-server', ['-p', '6969', '-a', '0.0.0.0', '-g', '-s', '-c-1', '-d', 'false'])
+cmd('./build/server', [], true);
+cmd('http-server', ['-p', '6969', '-a', '0.0.0.0', '-g', '-s', '-c-1', '-d', 'false'], true)
