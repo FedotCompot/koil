@@ -23,7 +23,7 @@ Dependencies
 
 ```console
 $ npm install
-$ node run build
+$ npm run build
 $ npm run serve
 $ <browser> https://localhost:6969/
 ```
